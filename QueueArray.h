@@ -2,7 +2,12 @@
 #include <iostream>
 #include <limits>
 #include <memory>
+#include <cassert>
+#include "ExceptionQueueIsFull.h"
+#include "ExceptionQueueIsEmpty.h"
 using namespace std;
+
+// HW 13 # 2 - TRY CATCH THROW check Dequeue
 
 template <typename T>
 class QueueArray
@@ -112,6 +117,8 @@ class QueueArray
 	int queueRear;				// Index of the next space after currentSize
 	int currentSize;			// Index of the last space of defined data
 	unique_ptr<T[]> list;		// Use unique_ptr instead of raw ptr
+	ExceptionQueueIsEmpty emptyMessage;
+	ExceptionQueueIsFull  fullMessage;
 
 };
 
@@ -219,8 +226,14 @@ T QueueArray<T>::Front() const
 template <typename T>
 void QueueArray<T>::Enqueue(const T& object)
 {
-	if(!IsFull())
+	// if(!IsFull())
+	try
 	{
+			if(currentSize == maxSize)
+			{
+				throw object;
+			}
+
 			if(currentSize == 0)
 			{
 				list[currentSize] = object;
@@ -233,9 +246,9 @@ void QueueArray<T>::Enqueue(const T& object)
 		cout << "\nElement was succesfully added.\n\n";
 		currentSize++;		
 	}
-	else
+	catch(...)
 	{
-		cout << "Sorry, the queue is full\n\n";
+		fullMessage.what();
 	}
 }
 
@@ -247,8 +260,29 @@ T QueueArray<T>::Dequeue()
 	if(IsEmpty())
 	{
 		cout << "ERROR - Cannot dequeue from an empty list.\n\n";
-		tempObj = -999;
-
+		try
+		{
+			if(!isdigit(tempObj))
+			{
+				throw tempObj;
+			}
+			else
+			{
+				tempObj = -999;
+			}
+		}
+		catch(double x)
+		{
+			tempObj = 0.0000001
+		}
+		catch(string s)
+		{
+			tempObj = "Empty";
+		}
+		catch(...)
+		{
+			emptyMessage.what();
+		}				
 	}
 	else
 	{
