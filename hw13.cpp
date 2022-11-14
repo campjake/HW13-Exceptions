@@ -1,4 +1,5 @@
 #include "QueueArray.h"
+
 // HW 13 #1 Line 36 - ASSERT
 //HW 13 #2 in QueueArrary.h
 int main()
@@ -33,7 +34,7 @@ int main()
 
 	// Test 1) Remove from an empty queue
 
-	assert(isdigit(inAr.Front()));
+	// assert(isdigit(inAr.Front()));
 	inAr.Dequeue();
 
 	// Test 2) Test IsEmpty and IsFull

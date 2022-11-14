@@ -3,6 +3,8 @@
 #include <limits>
 #include <memory>
 #include <cassert>
+#include <cctype>
+#include <locale>
 #include "ExceptionQueueIsFull.h"
 #include "ExceptionQueueIsEmpty.h"
 using namespace std;
@@ -229,7 +231,7 @@ void QueueArray<T>::Enqueue(const T& object)
 	// if(!IsFull())
 	try
 	{
-			if(currentSize == maxSize)
+			if(queueRear == maxSize)
 			{
 				throw object;
 			}
@@ -248,7 +250,7 @@ void QueueArray<T>::Enqueue(const T& object)
 	}
 	catch(...)
 	{
-		fullMessage.what();
+		cerr << fullMessage.what();
 	}
 }
 
@@ -259,36 +261,38 @@ T QueueArray<T>::Dequeue()
 	
 	if(IsEmpty())
 	{
-		cout << "ERROR - Cannot dequeue from an empty list.\n\n";
+		// cout << "ERROR - Cannot dequeue from an empty list.\n\n";
 		try
 		{
-			if(!isdigit(tempObj))
-			{
-				throw tempObj;
-			}
-			else
-			{
-				tempObj = -999;
-			}
+			throw tempObj;
+		}
+		catch(int x)
+		{
+			tempObj = -9999;
+			cerr << emptyMessage.what();
 		}
 		catch(double x)
 		{
-			tempObj = 0.0000001
+			tempObj = 0.0000001;
+			cerr << emptyMessage.what();
 		}
 		catch(string s)
 		{
-			tempObj = "Empty";
+			s = "Empty";
+			tempObj = 1;
+			cerr << emptyMessage.what();
+			
 		}
 		catch(...)
 		{
-			emptyMessage.what();
+			cerr << emptyMessage.what();
 		}				
 	}
 	else
 	{
-		tempObj = list[0];
+		tempObj = list[queueFront];
 
-		for(int i = 0; i < currentSize; i++)
+		for(int i = 0; i < currentSize - 1; i++)
 		{
 			list[i] = list[i + 1];
 		}
