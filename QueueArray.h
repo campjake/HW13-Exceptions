@@ -159,6 +159,8 @@ const QueueArray<T>& QueueArray<T>::operator=(const QueueArray<T>& otherObject)
 {
 	if (this != &otherObject)
 	{
+		list.release();	
+		list = make_unique<T[]>(otherObject.maxSize); 
 		Copy(otherObject);
 	}
 
@@ -229,6 +231,9 @@ template <typename T>
 void QueueArray<T>::Enqueue(const T& object)
 {
 	// if(!IsFull())
+	
+	// BAD -- DO NOT TRY/CATCH/THROW in a fcn.
+	//		  It should be in main()
 	try
 	{
 			if(queueRear == maxSize)
@@ -262,6 +267,9 @@ T QueueArray<T>::Dequeue()
 	if(IsEmpty())
 	{
 		// cout << "ERROR - Cannot dequeue from an empty list.\n\n";
+
+		// BAD -- DO NOT TRY/CATCH/THROW in a fcn.
+		//		  It should be in main()
 		try
 		{
 			throw tempObj;
